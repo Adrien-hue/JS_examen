@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <h1>Examen JavaScript</h1>
+
+    <h2>Exercice 1 : Générateur de mot de passe</h2>
+    <form id="formGeneratePassword">
+        <label for="passwordLength">Longueur du mot de passe : </label>
+        <input type="number" id="passwordLength" min="8" max="64" value="8" required>
+
+        <button type="submit" id="generatePassword">Générer</button>
+    </form>
+    <p>Votre mot de passe est : <span id="generatedPassword"></span></p>
+
+    <h2>Exercice 2 : Conversion des degrès Celcius et Fahrenheit</h2>
+    <table>
+        <tr>
+            <td>Température en degrès Celcius :</td>
+            <td><input type="number" id="degresCelcius"></td>
+        </tr>
+        <tr>
+            <td>Température en degrès Fahrenheit :</td>
+            <td><input type="number" id="dregresFahrenheit"></td>
+        </tr>
+    </table>
+
+    <h2>Exercice 3 : Générateur de citation</h2>
+    <button type="button" id="generateCitation">Générer une citation</button>
+
+    <div id="popup" class="hide">
+        <div id="popup-content">
+            <span id="popup-close">&times;</span>
+            <p id="popup-message"></p>
+        </div>
+    </div>
+
+    <h2>Exercice 4 : Création d'un DarkMode</h2>
+
+    <p>Mode sombre activé : </p>
+    <label class="switch">
+        <input type="checkbox" id="darkMode">
+        <span class="slider round"></span>
+    </label>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        /**************************************************************************/
+        /************************Génération du mot de passe************************/
+        /**************************************************************************/
+        
+        let formGeneratePassword = document.getElementById('formGeneratePassword');
+
+        formGeneratePassword.addEventListener('submit', function(event){
+            //Annule le comportement de base
+            event.preventDefault();
+
+            //Déclaration
+            let passwordLength, password, generatedPassword;
+
+            //Récupèration de la longueur souhaitée
+            passwordLength = document.getElementById('passwordLength').value;
+
+            //Génération du mot de passe
+            password = generatePassword(passwordLength);
+
+            //Affichage du mot de passe
+            generatedPassword = document.getElementById('generatedPassword');
+            generatedPassword.textContent = password;
+        });
+
+        /**************************************************************************/
+        /**************************Conversion des degrès***************************/
+        /**************************************************************************/
+        
+        let inputDegresCelcius = document.getElementById('degresCelcius');
+        let inputDegresFahrenheit = document.getElementById('dregresFahrenheit');
+
+        let degres;
+
+        inputDegresCelcius.addEventListener('change', function() {
+            //Converti les degres Celcius en degres Fahrenheit
+            degres = parseInt(convertDegres(inputDegresCelcius.value, 'fahrenheit'));
+
+            inputDegresFahrenheit.value = degres;
+        });
+
+        inputDegresFahrenheit.addEventListener('change', function() {
+            //Converti les degres Fahrenheit en degres Celcius
+            degres = parseInt(convertDegres(inputDegresFahrenheit.value, 'celcius'));
+
+            inputDegresCelcius.value = degres;
+        });
+
+        /**************************************************************************/
+        /**************************Génération de citation**************************/
+        /**************************************************************************/
+
+        let btnGenerateCitation = document.getElementById('generateCitation');
+        
+        let popup = document.getElementById('popup');
+        let popupClose = document.getElementById('popup-close');
+        let popupMessage = document.getElementById('popup-message');
+
+        let citation;
+
+        btnGenerateCitation.addEventListener('click', function() {
+            //Ajout du texte
+            citation = generateRandString();
+            popupMessage.textContent = citation
+
+            //Ouverture de la popup
+            popup.classList.remove('hide');
+        });
+
+        //Fermeture de la popup au click sur la croix
+        popupClose.addEventListener('click', function(){
+            //Ferme la popup
+            popup.classList.add('hide');
+
+            //Vide le texte de la popup
+            popupMessage.textContent = "";
+        });
+
+        //Fermeture de la popup au click si il n'est pas sur la popup
+        window.onclick = function(event) {
+            if (event.target == popup) {
+                //Ferme la popup
+                popup.classList.add('hide');
+
+                //Vide le texte de la popup
+                popupMessage.textContent = "";
+            }
+        }
+
+        /**************************************************************************/
+        /****************************Gestion du DarkMode***************************/
+        /**************************************************************************/
+
+        let inputDarkMode = document.getElementById('darkMode');
+        let body = document.querySelector('body');
+        let isDarkMode;
+
+        inputDarkMode.addEventListener('change', function(){
+            isDarkMode = inputDarkMode.checked;
+            
+            if(isDarkMode){
+                body.classList.add('darkMode');
+            } else {
+                body.classList.remove('darkMode');
+            }
+        });
+    });
+</script>
+</html>
